@@ -1,0 +1,164 @@
+git_commands.txt
+================
+Git commands I used for the SDP Git & GitHub assignment, in the order I used them.
+
+Talin Daga | 2024EB02478 | Software Development Practices
+Repo: https://github.com/Talin12/sdp-git-assignment
+
+(Only git commands are listed here. I also used normal terminal commands like mkdir, cd,
+ls, cat and echo to make the project folder and the test files.)
+
+
+STEP 1 - Local repository setup
+-------------------------------
+
+git --version
+    Prints the installed git version. I used it to check git was installed (2.50.1).
+
+git init -b main
+    Turns the current folder into a git repository (creates the hidden .git folder) and
+    names the first branch "main" instead of "master".
+
+git config user.name "Talin Daga"
+    Sets the author name for commits in this repo only (no --global).
+
+git config user.email "186754467+Talin12@users.noreply.github.com"
+    Sets the author email for this repo. I used my GitHub no-reply address so my personal
+    email doesn't end up in a public repo, and the commits still link to my account.
+
+git status
+    Shows which branch I'm on and which files are untracked, modified or staged.
+    I ran this after almost every change to check things before committing.
+
+
+STEP 2 - Commits, branching and merging
+---------------------------------------
+
+git add index.html about.html
+    Moves both new files to the staging area so they go into the next commit.
+
+git commit -m "Initial commit: add index.html and about.html"
+    Commit 1. Saves a snapshot of the staged files with a message, recording the
+    initial state of the project.
+
+git diff
+    Shows line by line what changed since the last commit (for changes not staged yet).
+    I used it to check my edit to index.html before staging it.
+
+git add index.html
+    Stages the modified index.html.
+
+git commit -m "Update home page intro and add nav links"
+    Commit 2, the change to index.html.
+
+git branch feature
+    Creates a new branch called "feature" at the current commit. It doesn't switch to it.
+
+git branch
+    Lists the local branches. The * marks the branch I'm currently on.
+
+git checkout feature
+    Switches to the feature branch, so the next commit goes on that branch.
+    (git switch feature does the same thing in newer versions of git.)
+
+git add about.html
+    Stages the about.html change I made on the feature branch.
+
+git commit -m "Add what I am learning section to about page"
+    Commit 3, made on the feature branch, so main doesn't have it yet.
+
+git log --oneline --graph --all
+    Shows the history of all branches, one line per commit, with a small text graph.
+    Used it to see feature one commit ahead of main, and again after the merge.
+
+git checkout main
+    Switches back to the main branch.
+
+git merge --no-ff feature -m "Merge branch 'feature' into main"
+    Merges feature into main. --no-ff makes git create a proper merge commit even though
+    a fast-forward was possible, so the branch stays visible in the history.
+
+git log --stat
+    Full history (hash, author, date, message) plus the files changed in each commit and
+    how many lines were added or removed.
+
+
+STEP 3 - .gitignore
+-------------------
+
+git status --ignored
+    Same as git status but also lists the ignored files. It showed debug.log and temp/
+    under "Ignored files" once .gitignore was in place.
+
+git check-ignore -v debug.log temp/notes.txt
+    Tells me which line of .gitignore is ignoring each file (*.log on line 2, temp/ on
+    line 5).
+
+git add .gitignore
+    Stages the .gitignore file.
+
+git commit -m "Add .gitignore for log files and temp folder"
+    Commits .gitignore so the ignore rules are part of the repo.
+
+
+STEP 4 - Undoing a commit
+-------------------------
+
+git add contact.html
+    Stages the new contact page.
+
+git commit -m "Add contact page"
+    The extra commit that I undid in the next step.
+
+git log --oneline -3
+    Shows only the last 3 commits. Used it to check the history before undoing.
+
+git revert HEAD --no-edit
+    Undoes the last commit (HEAD) by making a new commit that does the opposite, so
+    contact.html is removed but the history is kept. --no-edit keeps the default
+    "Revert ..." message instead of opening an editor.
+
+git log --oneline -4
+    Last 4 commits, to see the revert commit sitting on top of "Add contact page".
+
+git show --stat HEAD
+    Shows the details of the latest commit (the revert) and which file it changed.
+
+(I chose revert over git reset --hard HEAD~1 because reset removes the commit from the
+history completely. Revert is the safer way to undo something on a branch that gets
+pushed, and it also means the undo can be seen on GitHub.)
+
+
+STEP 5 - Pushing to GitHub
+--------------------------
+
+git remote add origin https://github.com/Talin12/sdp-git-assignment.git
+    Connects my local repo to the empty repository I created on GitHub and names this
+    remote "origin".
+
+git remote -v
+    Lists the remotes with their fetch and push URLs, to confirm origin was set correctly.
+
+git push -u origin main
+    Uploads the main branch and all its commits to GitHub. -u sets origin/main as the
+    upstream, so after this a plain "git push" is enough.
+
+git push -u origin feature
+    Pushes the feature branch too, so it also shows up on GitHub.
+
+git branch -a
+    Lists local branches and remote-tracking branches (remotes/origin/main and
+    remotes/origin/feature).
+
+
+STEP 6 - Adding this file
+-------------------------
+
+git add git_commands.txt README.md
+    Stages this file and a short README for the repo.
+
+git commit -m "Add git_commands.txt and README"
+    Commits both files to main.
+
+git push
+    Pushes the new commit to GitHub (upstream was already set by the earlier -u).
