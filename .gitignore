@@ -1,0 +1,8 @@
+# log files
+*.log
+
+# temporary folder (scratch work, not part of the site)
+temp/
+
+# macOS system file
+.DS_Store
